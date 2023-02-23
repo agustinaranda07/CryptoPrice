@@ -3,6 +3,9 @@ import img from "./img/crypto.jpg"
 import Form from "./Components/Form"
 import useSelectCurrency from "./Hooks/useSelectCurrency"
 import { useState, useEffect } from "react"
+import Cotizacion from "./Components/Cotizacion"
+import SpinnerLoading from "./Components/SpinnerLoading"
+import Footer from "./Components/Footer"
 
 const Container = styled.div`
 max-width: 900px;
@@ -17,10 +20,9 @@ width:90%;
 const Imagen = styled.img`
 max-width:500px;
 width:100%;
-height:100%;
+height:80%;
 margin:100px auto 0 auto;
 display:block;
-background-color:transparent;
 `
 const Heading = styled.h1`
 font-family: "Lato",sans-serif;
@@ -47,20 +49,40 @@ const Criptos = styled.span`
 function App() {
 
   const [monedas,setMonedas] = useState({})
+  const [cotizado,setCotizado] = useState({})
+  const [loading,setLoading] = useState(false)
+  
+
   useEffect(()=>{
     if(Object.keys(monedas).length > 0){
-      console.log(monedas)
+      const cotizacion = async () =>{
+        setLoading(true)
+        setCotizado({})
+        const {monedaState,criptoState} = monedas
+        const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptoState}&tsyms=${monedaState}`
+        const answer = await fetch(url)
+        const getAnswer = await answer.json()
+        setCotizado(getAnswer.DISPLAY[criptoState][monedaState])
+        setLoading(false)
+      }
+      cotizacion();
     }
   },[monedas])
 
   return (
-  <Container>
-    <Imagen src={img} alt="criptomonedas"/>
-    <div>
-    <Heading>Cotiza tus <Criptos>criptos</Criptos> al instante</Heading>
-    <Form setMonedas={setMonedas}/>
-    </div>
-  </Container>
+  <>
+    <Container>
+      <Imagen src={img} alt="criptomonedas"/>
+      <div>
+        <Heading>Cotiza tus <Criptos>criptos</Criptos> al instante</Heading>
+        <Form setMonedas={setMonedas}/>
+        {loading && <SpinnerLoading/>}
+        {cotizado.PRICE && <Cotizacion cotizado={cotizado}/>}
+      </div>
+    </Container>
+    <Footer/>
+  </>
+
   )
 }
 

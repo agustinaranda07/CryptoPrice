@@ -9,6 +9,7 @@ const Submit = styled.input`
     border:none;
     width:100%;
     padding: 10px;
+    margin:15px 0;
     border-radius:4px;
     color:#FFF;
     font-weight:700;
