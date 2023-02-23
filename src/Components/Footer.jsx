@@ -26,7 +26,7 @@ const Link = styled.a`
 function Footer() {
   return (
     <Container>
-        <Texto>Sitio web desarrollado por <Link href="https://agustindev.netlify.app/" target="_blank">Agustin Aranda</Link></Texto>
+        <Texto>Developed by <Link href="https://agustindev.netlify.app/" target="_blank">Agustin Aranda</Link></Texto>
     </Container>
   )
 }
